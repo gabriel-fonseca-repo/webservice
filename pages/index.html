@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Conversão</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous" />
+
+		<style>
+			* {
+				font-size: larger;
+			}
+
+			body {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				width: 100vw;
+				height: 100vh;
+			}
+
+			form {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				gap: 20px;
+			}
+		</style>
+
+		<script defer>
+			window.onload = () => {
+				document.getElementById("formConverter").addEventListener("submit", (event) => {
+					event.preventDefault();
+
+					console.log("Realizando requisição!...");
+
+					fetch("http://127.0.0.1:8080/converter", {
+						method: "POST",
+						body: new URLSearchParams(new FormData(event.target)),
+					})
+						.then((resp) => {
+							return resp.json();
+						})
+						.then((body) => {
+							console.log("Requisição realizada!");
+							console.log("Resposta:");
+							console.log(body);
+							document.getElementById("resultado").value = body.valorConvertido;
+						})
+						.catch((error) => {
+							console.log(error);
+						});
+				});
+			};
+		</script>
+	</head>
+	<body>
+		<form id="formConverter">
+			<input type="number" name="valor" id="valor" placeholder="Valor a ser convertido" />
+
+			<select name="moeda" id="moeda">
+				<option value="">Para qual mode desejas converter?</option>
+				<option value="USD">USD</option>
+				<option value="EUR">EUR</option>
+			</select>
+
+			<button type="submit">Converter</button>
+
+			<input type="number" value="" id="resultado" />
+		</form>
+	</body>
+</html>
